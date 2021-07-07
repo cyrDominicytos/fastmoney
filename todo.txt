@@ -1,0 +1,29 @@
+prod_bd : Admin#$@2021
+
+
+
+
+
+
+==== TRIGGER =========
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `gains_after_insert` AFTER INSERT ON `gains` FOR EACH ROW BEGIN
+	UPDATE USERS SET USERS.SOLDE = USERS.SOLDE + NEW.montant  WHERE USERS.ID = NEW.id_user;
+END
+
+
+
+create or replace view bilan_gains as
+	select 
+	users.id AS id_user,users.solde,
+	depots.id as id_depot, depots.pourcentage, depots.montant as montant_depot, depots.statut ,depots.dernier_paye,
+	sum(gains.montant) as montant_gain, gains.type, gains.created_at as date_gain, (100*sum(gains.montant)/depots.montant) as pourcentage_atteint
+from depots, gains, users
+
+where depots.id = gains.id_user
+and depots.id_user = users.id 
+and  gains.type = 1
+
+group by users.id,users.solde, depots.id, depots.pourcentage, depots.montant,depots.statut,depots.statut,depots.dernier_paye,
+         gains.type
+		    ;

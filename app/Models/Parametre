@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
+
+class Parametre extends AppModele
+{
+    
+    use CrudTrait;
+    use \Venturecraft\Revisionable\RevisionableTrait;
+    
+    //
+protected $fillable = ['code','designation','double_value','int_value','string_value'];
+ 
+    
+  
+
+
+
+/**
+     * Get nom et prénom du dernier utilisateur ayant modifié le paramètre.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getNomUserAttribute()
+    {
+        return $this->user->firstname.' '.$this->user->name;       
+    }
+    
+}
